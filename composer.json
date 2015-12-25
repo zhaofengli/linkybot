@@ -1,0 +1,19 @@
+{
+	"name": "zhaofengli/linkybot",
+	"description": "Telegram bot that expands wikilinks",
+	"require": {
+		"irazasyed/telegram-bot-sdk": "^0.2.6"
+	},
+	"license": "BSD-2-Clause",
+	"authors": [
+		{
+			"name": "Zhaofeng Li",
+			"email": "hello@zhaofeng.li"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"Feng": "src/"
+		}
+	}
+}
