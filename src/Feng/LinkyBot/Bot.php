@@ -30,23 +30,9 @@ class Bot {
 	protected $api = null;
 	protected $apiOffset = 0;
 	protected $config = array();
-	protected $linkPattern = "/"
-	                       . "\[\["
-	                       . "(?'pagename'[^\#\<\>\[\]\|\{\}]+)"
-	                       . "(\|(?'caption'[^\[\]]+))?"
-	                       . "\]\]"
-	                       . "/";
-	protected $templatePattern = "/"
-	                           . "\{\{"
-	                           . "(?'templatename'[^\#\<\>\[\]\|\{\}]+)"
-	                           . "(\|(?'param'[^\}]+))?"
-	                           . "\}\}"
-	                           . "/";
-	protected $interwikiPattern = "/^"
-	                            . "\:?"
-	                            . "(?'wiki'[A-Za-z]+)\:"
-	                            . "(?'pagename'.*)"
-	                            . "$/";
+	protected $linkPattern = "";
+	protected $templatePattern = "";
+	protected $interwikiPattern = "";
 	protected $cacheInterwikiList = array();
 	protected $cacheInterwikiMap = array();
 	protected $cacheInterwikiApiMap = array();
@@ -57,6 +43,23 @@ class Bot {
 	public function __construct( $config ) {
 		$this->config = $config;
 		$this->api = new Telegram( $this->getConfig( "key" ) );
+		$this->linkPattern = "/"
+		                   . "\[\["
+		                   . "(?'pagename'[^\#\<\>\[\]\|\{\}]+)"
+		                   . "(\|(?'caption'[^\[\]]+))?"
+		                   . "\]\]"
+		                   . "/";
+		$this->templatePattern = "/"
+		                       . "\{\{"
+		                       . "(?'templatename'[^\#\<\>\[\]\|\{\}]+)"
+		                       . "(\|(?'param'[^\}]+))?"
+		                       . "\}\}"
+		                       . "/";
+		$this->interwikiPattern = "/^"
+		                        . "\:?"
+		                        . "(?'wiki'[A-Za-z]+)\:"
+		                        . "(?'pagename'.*)"
+		                        . "$/";
 		$this->rebuildCache();
 		if ( $this->getConfig( "preserveChatPreferences" ) ) {
 			$this->chatPreferences = json_decode( file_get_contents( $this->getConfig( "chatPreferencesFile" ) ), true );
