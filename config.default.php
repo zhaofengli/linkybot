@@ -88,11 +88,14 @@ $config = array(
 	),
 	"arrow" => "👉",
 	"captions" => array(
+		"bot" => "🤖",
 		"gender-male" => "👨",
 		"gender-female" => "👩",
 		"gender-unknown" => "😃",
 		"groups-sysop" => "🔧",
-		"groups-rollback" => "⏪",
+		"groups-rollbacker" => "⏪",
+		"groups-autopatrolled" => "📝",
+		"groups-oversighter" => "🔍",
 		"apifailed" => "💻❓"
 	),
 	"captionOverrides" => array(

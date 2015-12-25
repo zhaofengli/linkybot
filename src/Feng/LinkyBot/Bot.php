@@ -212,15 +212,22 @@ class Bot {
 				if ( !isset( $response['query']['users'][0]['missing'] ) ) {
 					$userinfo = $response['query']['users'][0];
 					// gender
-					if ( "male" == $userinfo['gender'] ) $caption .= $captions['gender-male'];
-					else if ( "female" == $userinfo['gender'] ) $caption .= $captions['gender-female'];
-					else $caption .= $captions['gender-unknown'];
+					if ( in_array( "bot", $userinfo['groups'] ) ) {
+						// FIXME: What? Bots don't have genders?
+						$caption .= $captions['bot'];
+					} else {
+						if ( "male" == $userinfo['gender'] ) $caption .= $captions['gender-male'];
+						else if ( "female" == $userinfo['gender'] ) $caption .= $captions['gender-female'];
+						else $caption .= $captions['gender-unknown'];
+					}
 					// user groups
 					if ( in_array( "sysop", $userinfo['groups'] ) ) $caption .= $captions['groups-sysop'];
 					else {
-						if ( in_array( "rollback", $userinfo['rights'] ) ) $caption .= $captions['groups-rollback'];
+						if ( in_array( "rollbacker", $userinfo['groups'] ) ) $caption .= $captions['groups-rollbacker'];
+						if ( in_array( "autoreviewer", $userinfo['groups'] ) ) $caption .= $captions['groups-autopatrolled'];
 						// TODO: more groups?
 					}
+					if ( in_array( "oversight", $userinfo['groups'] ) ) $caption .= $captions['groups-oversighter'];
 				} else {
 					$caption = $captions['apifailed'];
 				}
