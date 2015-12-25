@@ -66,7 +66,7 @@ $config = array(
 			"wikis" => array( "wikia", "wikiasite" )
 		),
 		"google" => array(
-			"pattern" => "https://www.google.com.sg/search?q=%pagename%",
+			"pattern" => "https://www.google.com/search?q=%pagename%",
 			"wikis" => array( "google" )
 		),
 		"wenquanyi" => array(
