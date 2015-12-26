@@ -45,7 +45,7 @@ class Bot {
 		$this->api = new Telegram( $this->getConfig( "key" ) );
 		$this->linkPattern = "/"
 		                   . "\[\["
-		                   . "(?'pagename'[^\#\<\>\[\]\|\{\}]+)"
+		                   . "(?'pagename'[^\<\>\[\]\|\{\}]+)"
 		                   . "(\|(?'caption'[^\[\]]+))?"
 		                   . "\]\]"
 		                   . "/";
