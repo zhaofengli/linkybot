@@ -46,6 +46,7 @@ class Bot {
 		$this->linkPattern = "/"
 		                   . "\[\["
 		                   . "(?'pagename'[^\<\>\[\]\|\{\}]+)"
+		                   . "(\#(?'anchor'[\^|\[\]]+))?"
 		                   . "(\|(?'caption'[^\[\]]+))?"
 		                   . "\]\]"
 		                   . "/";
@@ -126,7 +127,8 @@ class Bot {
 					if ( preg_match_all( $this->linkPattern, $text, $matches ) ) {
 						foreach ( $matches['pagename'] as $index => $pagename ) {
 							$caption = !empty( $matches['caption'][$index] ) ? $matches['caption'][$index] : "";
-							if ( false !== $link = $this->getPageResponse( $pagename, $caption ) ) {
+							$anchor = !empty( $matches['anchor'][$index] ) ? $matches['anchor'][$index] : "";
+							if ( false !== $link = $this->getPageResponse( $pagename, $caption, $anchor ) ) {
 								$response .= "$link\r\n";
 							}
 						}
@@ -147,11 +149,11 @@ class Bot {
 		}
 	}
 
-	public function getPageResponse( $pagename, $caption = "" ) {
+	public function getPageResponse( $pagename, $caption = "", $anchor = "" ) {
 		$wiki = "";
 		$realpagename = "";
 		if ( false !== $this->resolveInterwiki( $pagename, $wiki, $realpagename ) ) {
-			return $this->getResponse( $wiki, $realpagename, $caption );
+			return $this->getResponse( $wiki, $realpagename, $caption, $anchor );
 		}
 		return false;
 	}
@@ -196,7 +198,7 @@ class Bot {
 		}
 	}
 
-	protected function getResponse( $wiki, $pagename, $caption = "" ) {
+	protected function getResponse( $wiki, $pagename, $caption = "", $anchor = "" ) {
 		$captions = $this->getConfig( "captions" );
 		if ( !$this->wikiSupported( $wiki ) ) return false;
 		if ( empty( $caption ) ) {
@@ -239,7 +241,12 @@ class Bot {
 			}
 		}
 
-		$url = str_replace( "%pagename%", $this->encodePageName( $pagename ), $this->cacheInterwikiMap[$wiki] );
+		$p = $this->encodePageName( $pagename );
+		if ( !empty( $anchor ) ) {
+			$p .= "#" . $this->encodeAnchor( $anchor );
+		}
+
+		$url = str_replace( "%pagename%", $p, $this->cacheInterwikiMap[$wiki] );
 		$url = str_replace( "%defaultLanguage%", $this->defaultLanguage, $url );
 		$url = str_replace( "%defaultWiki%", $this->defaultWiki, $url );
 		$response = "$caption " . $this->getConfig( "arrow" ) . " $url";
@@ -283,6 +290,13 @@ class Bot {
 
 	protected function encodePageName( $pagename ) {
 		return str_replace( " ", "_", $pagename );
+	}
+
+	protected function encodeAnchor( $anchor ) {
+		$anchor = urlencode( $anchor );
+		$anchor = str_replace( "%", ".", $anchor );
+		$anchor = str_replace( "+", "_", $anchor );
+		return $anchor;
 	}
 
 	protected function wikiSupported( $wiki ) {
