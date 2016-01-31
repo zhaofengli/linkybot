@@ -194,7 +194,14 @@ class Bot {
 	public function run() {
 		for ( ; ; ) {
 			$update = $this->api->getUpdates( $this->apiOffset, 100, 30 );
-			$this->processUpdate( $update );
+			try {
+				$this->processUpdate( $update );
+			} catch ( \Exception $e ) {
+				if ( $e->getMessage() != "[Error]: Bot was blocked by the user" ) {
+					// Very dirty, I know :P
+					throw $e; // :(
+				}
+			}
 		}
 	}
 
